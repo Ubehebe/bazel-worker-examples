@@ -24,6 +24,7 @@ genrule(
 echo(
     name = "echo",
     input = ":input",
+    worker = False,
 )
 
 diff_test(

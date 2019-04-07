@@ -8,17 +8,24 @@ import java.nio.file.Path;
 
 public final class Echo {
 
-  @Parameter(names = "--in", required = true)
+  @Parameter(names = "--in")
   private Path in;
 
-  @Parameter(names = "--out", required = true)
+  @Parameter(names = "--out")
   private Path out;
+
+  @Parameter(names = "--persistent_worker")
+  private boolean worker;
 
   private Echo() {}
 
   public static void main(String[] args) throws IOException {
     Echo e = new Echo();
     JCommander.newBuilder().addObject(e).build().parse(args);
-    Files.write(e.out, Files.readAllLines(e.in));
+    if (e.worker) {
+      throw new UnsupportedOperationException("TODO implement");
+    } else {
+      Files.write(e.out, Files.readAllLines(e.in));
+    }
   }
 }
