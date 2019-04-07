@@ -1,5 +1,3 @@
-load("//rules/misc:write_file_from_args.bzl", "write_file_from_args")
-
 def _echo(ctx):
     args = ctx.actions.args()
     args.add("--in", ctx.file.input)
@@ -10,7 +8,10 @@ def _echo(ctx):
         # regular invocation.
 
         worker_arg_file = ctx.actions.declare_file(ctx.attr.name + ".worker_args")
-        write_file_from_args(ctx, args, output = worker_arg_file)
+        ctx.actions.write(
+            output = worker_arg_file,
+            content = args,
+        )
         startup_args = ctx.actions.args()
         startup_args.add("@" + worker_arg_file.path)
         ctx.actions.run(
@@ -21,7 +22,8 @@ def _echo(ctx):
                 "supports-workers": "1",
             },
             arguments = [startup_args],
-            mnemonic = "Echo",
+            # There is a corresponding line in .bazelrc setting --strategy=EchoWorkerAware=worker.
+            mnemonic = "EchoWorkerAware",
         )
     else:
         # A normal action invocation.

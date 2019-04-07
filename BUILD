@@ -9,6 +9,7 @@ java_binary(
     ],
     main_class = "workertest.Echo",
     deps = [
+        "@io_bazel//src/main/protobuf:worker_protocol_java_proto",
         "@jcommander//jar",
     ],
 )
@@ -22,13 +23,25 @@ genrule(
 )
 
 echo(
-    name = "echo",
+    name = "non_worker",
     input = ":input",
     worker = False,
 )
 
+echo(
+    name = "worker",
+    input = ":input",
+    worker = True,
+)
+
 diff_test(
-    name = "diff_test",
-    actual = "echo.txt",
+    name = "non_worker_diff_test",
+    actual = "non_worker.txt",
+    expected = "input.txt",
+)
+
+diff_test(
+    name = "worker_diff_test",
+    actual = "worker.txt",
     expected = "input.txt",
 )

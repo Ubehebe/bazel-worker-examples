@@ -2,6 +2,8 @@ package workertest;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.google.devtools.build.lib.worker.WorkerProtocol.WorkRequest;
+import com.google.devtools.build.lib.worker.WorkerProtocol.WorkResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,13 +21,30 @@ public final class Echo {
 
   private Echo() {}
 
+  private static void workerMain() throws IOException {
+    while (true) {
+      WorkRequest workRequest = WorkRequest.parseDelimitedFrom(System.in);
+      Echo e = new Echo();
+      JCommander.newBuilder()
+          .addObject(e)
+          .build()
+          .parse(workRequest.getArgumentsList().toArray(new String[] {}));
+      e.echo();
+      WorkResponse.getDefaultInstance().writeDelimitedTo(System.out);
+    }
+  }
+
   public static void main(String[] args) throws IOException {
     Echo e = new Echo();
     JCommander.newBuilder().addObject(e).build().parse(args);
     if (e.worker) {
-      throw new UnsupportedOperationException("TODO implement");
+      workerMain();
     } else {
-      Files.write(e.out, Files.readAllLines(e.in));
+      e.echo();
     }
+  }
+
+  private void echo() throws IOException {
+    Files.write(out, Files.readAllLines(in));
   }
 }
