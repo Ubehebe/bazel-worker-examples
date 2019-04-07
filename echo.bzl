@@ -1,11 +1,11 @@
 def _echo(ctx):
     args = ctx.actions.args()
-    args.add("--input", ctx.file.input)
-    ctx.actions.run_shell(
+    args.add("--in", ctx.file.input)
+    args.add("--out", ctx.outputs.txt)
+    ctx.actions.run(
         inputs = [ctx.file.input],
         outputs = [ctx.outputs.txt],
-        command = """%s > %s "$@" """ % (ctx.executable._echo.path, ctx.outputs.txt.path),
-        tools = [ctx.executable._echo],
+        executable = ctx.executable._echo,
         arguments = [args],
     )
 
