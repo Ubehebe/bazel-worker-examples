@@ -25,7 +25,7 @@ def _echo(ctx):
         ctx.actions.run(
             inputs = [ctx.file.input, worker_arg_file],
             outputs = [ctx.outputs.txt],
-            executable = ctx.executable._echo,
+            executable = ctx.executable.executable,
             execution_requirements = {
                 "supports-workers": "1",
             },
@@ -39,7 +39,7 @@ def _echo(ctx):
         ctx.actions.run(
             inputs = [ctx.file.input],
             outputs = [ctx.outputs.txt],
-            executable = ctx.executable._echo,
+            executable = ctx.executable.executable,
             arguments = [args],
         )
 
@@ -58,10 +58,11 @@ echo = rule(
 For this rule to run its action in a worker, this flag must be set AND the build must be invoked
 with --strategy=EchoWorkerAware=worker.""",
         ),
-        "_echo": attr.label(
-            default = "//workertest:Echo",
+        "executable": attr.label(
             executable = True,
             cfg = "host",
+            doc = """the executable that powers the action (either //workertest:Echo or
+//workertest:echo)""",
         ),
     },
     outputs = {

@@ -1,7 +1,7 @@
 load(":echo.bzl", "echo")
 load("//rules/test:diff_test.bzl", "diff_test")
 
-# The binary that powers the echo rule.
+# The java binary that powers the echo rule.
 java_binary(
     name = "Echo",
     srcs = [
@@ -23,25 +23,27 @@ genrule(
 )
 
 echo(
-    name = "non_worker",
+    name = "java_non_worker",
+    executable = ":Echo",
     input = ":input",
     maybe_worker = False,
 )
 
 echo(
-    name = "worker",
+    name = "java_worker",
+    executable = ":Echo",
     input = ":input",
     maybe_worker = True,
 )
 
 diff_test(
-    name = "non_worker_diff_test",
-    actual = "non_worker.txt",
+    name = "java_non_worker_diff_test",
+    actual = ":java_non_worker",
     expected = "input.txt",
 )
 
 diff_test(
     name = "worker_diff_test",
-    actual = "worker.txt",
+    actual = ":java_worker",
     expected = "input.txt",
 )
