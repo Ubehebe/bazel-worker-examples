@@ -2,11 +2,19 @@ def _echo(ctx):
     args = ctx.actions.args()
     args.add("--in", ctx.file.input)
     args.add("--out", ctx.outputs.txt)
-    if ctx.attr.worker:
-        # The ultimate decision to use a worker or not is controlled by the --strategy flag to bazel
-        # build. This action must be invoked in a way that is compatible with both workers and
-        # regular invocation.
-
+    if ctx.attr.maybe_worker:
+        # It is impossible to know at analysis time if the action will be executed by a worker;
+        # that is controlled at execution time by --strategy=EchoWorkerAware=<strategy>.
+        # Thus this action must be set up in a way that is compatible with both worker and normal
+        # execution. In both cases, there is some bazel magic:
+        # - If it really is a worker, bazel gets rid of the @foo.worker_args argument and replaces
+        # it with a --persistent_worker flag. The contents of the worker_arg_file will be available on
+        # stdin as a WorkRequest proto, and the executable should write its result as a WorkResult
+        # proto to stdout.
+        # - If it really is not a worker, bazel inlines @foo.worker_args (replaces it with its own
+        # contents).
+        # See https://groups.google.com/forum/#!msg/bazel-discuss/oAEnuhYOPm8/ol7hf4KWJgAJ for more
+        # information.
         worker_arg_file = ctx.actions.declare_file(ctx.attr.name + ".worker_args")
         ctx.actions.write(
             output = worker_arg_file,
@@ -26,7 +34,8 @@ def _echo(ctx):
             mnemonic = "EchoWorkerAware",
         )
     else:
-        # A normal action invocation.
+        # A non-worker action invocation. Since this action doesn't set supports-workers,
+        # we know at analysis time it can't be invoked as a worker.
         ctx.actions.run(
             inputs = [ctx.file.input],
             outputs = [ctx.outputs.txt],
@@ -43,8 +52,11 @@ echo = rule(
             mandatory = True,
             allow_single_file = True,
         ),
-        "worker": attr.bool(
+        "maybe_worker": attr.bool(
             mandatory = True,  # just to be explicit
+            doc = """whether to attempt to use a worker.
+For this rule to run its action in a worker, this flag must be set AND the build must be invoked
+with --strategy=EchoWorkerAware=worker.""",
         ),
         "_echo": attr.label(
             default = "//workertest:Echo",

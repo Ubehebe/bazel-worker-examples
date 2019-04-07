@@ -21,6 +21,10 @@ public final class Echo {
 
   private Echo() {}
 
+  /**
+   * If this is executing as a worker, its flags will be delivered via a WorkRequest proto on stdin,
+   * and it should deliver its result via a WorkResult proto to stdout.
+   */
   private static void workerMain() throws IOException {
     while (true) {
       WorkRequest workRequest = WorkRequest.parseDelimitedFrom(System.in);

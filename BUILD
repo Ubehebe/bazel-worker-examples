@@ -25,13 +25,13 @@ genrule(
 echo(
     name = "non_worker",
     input = ":input",
-    worker = False,
+    maybe_worker = False,
 )
 
 echo(
     name = "worker",
     input = ":input",
-    worker = True,
+    maybe_worker = True,
 )
 
 diff_test(
