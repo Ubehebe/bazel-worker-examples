@@ -44,14 +44,27 @@ echo(
     maybe_worker = True,
 )
 
+echo(
+    name = "python_non_worker",
+    executable = ":echo_py",
+    input = ":input",
+    maybe_worker = False,
+)
+
 diff_test(
     name = "java_non_worker_diff_test",
     actual = ":java_non_worker",
-    expected = "input.txt",
+    expected = ":input",
 )
 
 diff_test(
     name = "worker_diff_test",
     actual = ":java_worker",
-    expected = "input.txt",
+    expected = ":input",
+)
+
+diff_test(
+    name = "python_non_worker_diff_test",
+    actual = ":python_non_worker",
+    expected = ":input",
 )
