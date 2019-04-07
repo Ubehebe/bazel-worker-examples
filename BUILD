@@ -14,6 +14,14 @@ java_binary(
     ],
 )
 
+py_binary(
+    name = "echo_py",
+    srcs = [
+        "echo.py",
+    ],
+    main = "echo.py",
+)
+
 # Generate some fake input.
 genrule(
     name = "input",
