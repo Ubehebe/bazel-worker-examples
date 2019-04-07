@@ -1,5 +1,6 @@
 load(":echo.bzl", "echo")
 load("//rules/test:diff_test.bzl", "diff_test")
+load("@pip//:requirements.bzl", "requirement")
 
 # The java binary that powers the echo rule.
 java_binary(
@@ -20,6 +21,10 @@ py_binary(
         "echo.py",
     ],
     main = "echo.py",
+    deps = [
+        "//forked:worker_protocol",
+        requirement("protobuf"),
+    ],
 )
 
 # Generate some fake input.
@@ -51,6 +56,13 @@ echo(
     maybe_worker = False,
 )
 
+echo(
+    name = "python_worker",
+    executable = ":echo_py",
+    input = ":input",
+    maybe_worker = True,
+)
+
 diff_test(
     name = "java_non_worker_diff_test",
     actual = ":java_non_worker",
@@ -66,5 +78,11 @@ diff_test(
 diff_test(
     name = "python_non_worker_diff_test",
     actual = ":python_non_worker",
+    expected = ":input",
+)
+
+diff_test(
+    name = "python_worker_diff_test",
+    actual = ":python_worker",
     expected = ":input",
 )
