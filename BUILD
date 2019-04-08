@@ -59,10 +59,18 @@ echo(
 )
 
 echo(
-    name = "python_non_worker",
+    name = "python_non_worker_1",
     executable = ":echo_py",
     input = ":input",
     maybe_worker = False,
+)
+
+echo(
+    name = "python_non_worker_2",
+    executable = ":echo_py",
+    input = ":input",
+    maybe_worker = False,
+    mnemonic = "oops",  # mnemonic doesn't match --strategy in .bazelrc: not executed as worker
 )
 
 echo(
@@ -79,7 +87,8 @@ diff_test(
         ":java_non_worker_1",
         ":java_non_worker_2",
         ":java_worker",
-        ":python_non_worker",
+        ":python_non_worker_1",
+        ":python_non_worker_2",
         ":python_worker",
     ],
     expected = ":input",

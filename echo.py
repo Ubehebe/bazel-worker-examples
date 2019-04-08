@@ -6,7 +6,7 @@ from forked.worker_protocol_pb2 import WorkRequest, WorkResponse
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _VarintBytes
 
-parser = ArgumentParser()
+parser = ArgumentParser(fromfile_prefix_chars='@')
 parser.add_argument("--in")
 parser.add_argument("--out")
 parser.add_argument("--persistent_worker", action="store_true")
@@ -41,6 +41,20 @@ def _worker_main():
 
 
 if __name__ == "__main__":
+    """Powers the echo Starlark rule.
+
+There are three paths through this main method:
+- If this binary is invoked from the echo() action that does not set `supports-workers`, the args
+  are delivered as regular command-line args, _echo() is called once, and the binary exits.
+- If this binary is invoked from the echo() action that sets `supports-workers`, but Bazel decides
+  not to run it as a worker, there is a single command-line arg `@blah.worker_args`. argparse
+  replaces this with the contents of `blah.worker_args` (see `fromfile_prefix_chars` param to
+  ArgumentParser), _echo() is called once, and the binary exits.
+- If this binary is invoked from the echo() action that sets `supports-workers` and Bazel decides to
+  run it as a worker, there is a single command-line arg `--persistent_worker`. The binary executes
+  an infinite loop (_worker_main), reading WorkRequest protos from stdin and writing WorkResponse
+  protos to stdout.
+  """
     args = parser.parse_args()
     if args.persistent_worker:
         _worker_main()
