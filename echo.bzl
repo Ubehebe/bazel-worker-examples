@@ -2,7 +2,7 @@ def _echo(ctx):
     args = ctx.actions.args()
     args.add("--in", ctx.file.input)
     args.add("--out", ctx.outputs.txt)
-    if ctx.attr.maybe_worker:
+    if ctx.attr.use_worker_if_possible:
         # It is impossible to know at analysis time if the action will be executed by a worker;
         # that is controlled at execution time by --strategy=EchoWorkerAware=<strategy>.
         # Thus this action must be set up in a way that is compatible with both worker and normal
@@ -51,11 +51,10 @@ echo = rule(
             mandatory = True,
             allow_single_file = True,
         ),
-        "maybe_worker": attr.bool(
-            mandatory = True,  # just to be explicit
+        "use_worker_if_possible": attr.bool(
             doc = """whether to attempt to use a worker.
 For this rule to run its action in a worker, this flag must be set AND the build must be invoked
-with --strategy=EchoWorkerAware=worker.""",
+with --strategy=mnemonic=worker, where mnemonic is the value of this target's mnemonic attr.""",
         ),
         "executable": attr.label(
             executable = True,
