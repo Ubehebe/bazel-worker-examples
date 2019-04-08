@@ -4,7 +4,7 @@ load("@pip//:requirements.bzl", "requirement")
 
 # The java binary that powers the echo rule.
 java_binary(
-    name = "Echo",
+    name = "EchoJava",
     srcs = [
         "Echo.java",
     ],
@@ -37,14 +37,14 @@ genrule(
 
 echo(
     name = "java_non_worker",
-    executable = ":Echo",
+    executable = ":EchoJava",
     input = ":input",
     maybe_worker = False,
 )
 
 echo(
     name = "java_worker",
-    executable = ":Echo",
+    executable = ":EchoJava",
     input = ":input",
     maybe_worker = True,
 )
