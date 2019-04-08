@@ -64,25 +64,12 @@ echo(
 )
 
 diff_test(
-    name = "java_non_worker_diff_test",
-    actual = [":java_non_worker"],
-    expected = ":input",
-)
-
-diff_test(
-    name = "worker_diff_test",
-    actual = [":java_worker"],
-    expected = ":input",
-)
-
-diff_test(
-    name = "python_non_worker_diff_test",
-    actual = [":python_non_worker"],
-    expected = ":input",
-)
-
-diff_test(
-    name = "python_worker_diff_test",
-    actual = [":python_worker"],
+    name = "diff_test",
+    actual = [
+        ":java_non_worker",
+        ":java_worker",
+        ":python_non_worker",
+        ":python_worker",
+    ],
     expected = ":input",
 )
