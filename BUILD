@@ -36,10 +36,18 @@ genrule(
 )
 
 echo(
-    name = "java_non_worker",
+    name = "java_non_worker_1",
     executable = ":EchoJava",
     input = ":input",
     maybe_worker = False,
+)
+
+echo(
+    name = "java_non_worker_2",
+    executable = ":EchoJava",
+    input = ":input",
+    maybe_worker = True,
+    mnemonic = "oops", # mnemonic doesn't match --strategy in .bazelrc: not executed as worker
 )
 
 echo(
@@ -68,7 +76,8 @@ echo(
 diff_test(
     name = "diff_test",
     actual = [
-        ":java_non_worker",
+        ":java_non_worker_1",
+        ":java_non_worker_2",
         ":java_worker",
         ":python_non_worker",
         ":python_worker",
