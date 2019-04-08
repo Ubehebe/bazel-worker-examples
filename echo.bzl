@@ -1,7 +1,7 @@
 def _echo(ctx):
     args = ctx.actions.args()
     args.add("--in", ctx.file.input)
-    args.add("--out", ctx.outputs.txt)
+    args.add("--out", ctx.outputs.out)
     if ctx.attr.use_worker_if_possible:
         # It is impossible to know at analysis time if the action will be executed by a worker;
         # that is controlled at execution time by --strategy=EchoWorkerAware=<strategy>.
@@ -24,7 +24,7 @@ def _echo(ctx):
         startup_args.add("@" + worker_arg_file.path)
         ctx.actions.run(
             inputs = [ctx.file.input, worker_arg_file],
-            outputs = [ctx.outputs.txt],
+            outputs = [ctx.outputs.out],
             executable = ctx.executable.executable,
             execution_requirements = {
                 "supports-workers": "1",
@@ -37,7 +37,7 @@ def _echo(ctx):
         # we know at analysis time it can't be invoked as a worker.
         ctx.actions.run(
             inputs = [ctx.file.input],
-            outputs = [ctx.outputs.txt],
+            outputs = [ctx.outputs.out],
             executable = ctx.executable.executable,
             arguments = [args],
         )
@@ -65,6 +65,6 @@ with --strategy=mnemonic=worker, where mnemonic is the value of this target's mn
         "mnemonic": attr.string(),
     },
     outputs = {
-        "txt": "%{name}.txt",
+        "out": "%{name}.out",
     },
 )
