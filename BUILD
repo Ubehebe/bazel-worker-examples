@@ -26,6 +26,7 @@ py_binary(
     deps = [
         "//forked:worker_protocol",
         requirement("protobuf"),
+        requirement("six"),
     ],
 )
 
