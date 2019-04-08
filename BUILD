@@ -47,7 +47,7 @@ echo(
     executable = ":EchoJava",
     input = ":input",
     maybe_worker = True,
-    mnemonic = "oops", # mnemonic doesn't match --strategy in .bazelrc: not executed as worker
+    mnemonic = "oops",  # mnemonic doesn't match --strategy in .bazelrc: not executed as worker
 )
 
 echo(
