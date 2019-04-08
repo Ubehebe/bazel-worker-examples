@@ -30,8 +30,7 @@ def _echo(ctx):
                 "supports-workers": "1",
             },
             arguments = [startup_args],
-            # There is a corresponding line in .bazelrc setting --strategy=EchoWorkerAware=worker.
-            mnemonic = "EchoWorkerAware",
+            mnemonic = ctx.attr.mnemonic,
         )
     else:
         # A non-worker action invocation. Since this action doesn't set supports-workers,
@@ -64,6 +63,7 @@ with --strategy=EchoWorkerAware=worker.""",
             doc = """the executable that powers the action (either //workertest:Echo or
 //workertest:echo)""",
         ),
+        "mnemonic": attr.string(),
     },
     outputs = {
         "txt": "%{name}.txt",

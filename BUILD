@@ -47,6 +47,7 @@ echo(
     executable = ":EchoJava",
     input = ":input",
     maybe_worker = True,
+    mnemonic = "EchoWorker",
 )
 
 echo(
@@ -61,6 +62,7 @@ echo(
     executable = ":echo_py",
     input = ":input",
     maybe_worker = True,
+    mnemonic = "EchoWorker",
 )
 
 diff_test(
