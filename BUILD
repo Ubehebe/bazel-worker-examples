@@ -1,4 +1,4 @@
-load(":echo.bzl", "echo")
+load("//:rules/echo.bzl", "echo")
 #load("//rules/test:diff_test.bzl", "diff_test")
 load("@pip//:requirements.bzl", "requirement")
 

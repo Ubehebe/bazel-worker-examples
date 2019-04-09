@@ -59,8 +59,7 @@ with --strategy=<mnemonic>=worker, where <mnemonic> is the value of this target'
         "executable": attr.label(
             executable = True,
             cfg = "host",
-            doc = """the executable that powers the action (either //workertest:EchoJava or
-//workertest:echo_py)""",
+            doc = "the executable that powers the action (either //:EchoJava or //:echo_py)",
         ),
         "mnemonic": attr.string(
             doc = """mnemonic to use for the action.
