@@ -1,0 +1,6 @@
+# This mnemonic matches :java_worker and :python_worker, ensuring their actions are run as workers.
+build --strategy=EchoWorker=worker
+
+# Not related to workers, but greatly speeds up builds when invoking bazel with different PATHs.
+# See https://github.com/bazelbuild/bazel/issues/7026.
+build --incompatible_strict_action_env

@@ -1,5 +1,5 @@
 load(":echo.bzl", "echo")
-load("//rules/test:diff_test.bzl", "diff_test")
+#load("//rules/test:diff_test.bzl", "diff_test")
 load("@pip//:requirements.bzl", "requirement")
 
 # Define the binaries that can power the echo rule. The Java and Python binaries do the same thing
@@ -85,15 +85,15 @@ echo(
 )
 
 # All of the actions should produce the same output.
-diff_test(
-    name = "diff_test",
-    actual = [
-        ":java_non_worker_1",
-        ":java_non_worker_2",
-        ":java_worker",
-        ":python_non_worker_1",
-        ":python_non_worker_2",
-        ":python_worker",
-    ],
-    expected = ":input",
-)
+#diff_test(
+#    name = "diff_test",
+#    actual = [
+#        ":java_non_worker_1",
+#        ":java_non_worker_2",
+#        ":java_worker",
+#        ":python_non_worker_1",
+#        ":python_non_worker_2",
+#        ":python_worker",
+#    ],
+#    expected = ":input",
+#)
