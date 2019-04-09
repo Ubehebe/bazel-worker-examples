@@ -64,7 +64,7 @@ with --strategy=<mnemonic>=worker, where <mnemonic> is the value of this target'
         "mnemonic": attr.string(
             doc = """mnemonic to use for the action.
 This is exposed so that tests can run the action with different mnemonics without needing separate
-bazel --strategy=<mnemonic>=<strategy> invocations (bazel test ... will run them all).""",
+bazel --strategy=<mnemonic>=<strategy> invocations (bazel build ... will run them all).""",
         ),
     },
     outputs = {
