@@ -16,17 +16,18 @@ and they can maintain state to speed up the build.
 Persistent workers are not documented on docs.bazel.build, though their existence is mentioned in
 a few places. The best resources seem to be [this bazel-discuss thread](https://groups.google.com/forum/#!msg/bazel-discuss/oAEnuhYOPm8/ol7hf4KWJgAJ)
 from 2016 and [this Medium post](https://medium.com/@mmorearty/how-to-create-a-persistent-worker-for-bazel-7738bba2cabb)
-from 2017. The rest of this readme uses concepts from these resources.
+from 2017. Together, they give a pretty good picture of how to write an action to take advantage of
+worker execution, so I won't explain this again here.
 
 ## What this repo is
 
-This repository defines a simple rule, [echo](echo.bzl), that can be powered by a tool written in any
-language. The tool is intentionally trivial: it copies the contents of a file given by an `--in`
-flag to a file given by the `--out` flag.
+This repository defines a simple rule, [echo](rules/echo.bzl), that can be powered by a tool written
+in any language. The tool is intentionally trivial: it copies the contents of a file given by an
+`--in` flag to a file given by the `--out` flag.
 
 This repo includes two implementations of the tool, in Java and Python. It runs them in several
 worker and non-worker configurations, and checks that the output from each is identical. (I welcome
-pull requests adding more languages; see below.) Since the email and blog post mentioned above are
+pull requests adding more languages.) Since the email and blog post mentioned above are
 mostly JVM-centric, I figured I would learn about persistent workers by implementing one in a different
 language. So I did. Here's what I learned.
 
