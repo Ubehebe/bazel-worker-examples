@@ -6,7 +6,10 @@ from forked.worker_protocol_pb2 import WorkRequest, WorkResponse
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _VarintBytes
 
-parser = ArgumentParser(fromfile_prefix_chars='@')
+parser = ArgumentParser(
+    # Without this, the second path documented in main below fails.
+    fromfile_prefix_chars='@'
+)
 parser.add_argument("--in")
 parser.add_argument("--out")
 parser.add_argument("--persistent_worker", action="store_true")
